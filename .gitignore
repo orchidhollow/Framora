@@ -1,0 +1,35 @@
+# Build outputs
+bin/
+obj/
+publish/
+
+# NuGet packages
+/packages/
+*.nupkg
+*.snupkg
+
+# JetBrains Rider
+.idea/
+riderModule.iml
+/_ReSharper.Caches/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+
+# Test results
+TestResults/
+[Tt]est[Rr]esult*/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
