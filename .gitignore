@@ -13,6 +13,9 @@ publish/
 riderModule.iml
 /_ReSharper.Caches/
 
+# VS Code
+.vscode/
+
 # User-specific files
 *.user
 *.suo
@@ -33,3 +36,6 @@ TestResults/
 
 # Logs
 *.log
+
+# FFmpeg binaries (download separately, do not commit)
+FFmpeg/
