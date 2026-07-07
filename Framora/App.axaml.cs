@@ -13,8 +13,14 @@ using Framora.Services;
 
 namespace Framora;
 
+/// <summary>
+/// 应用程序根类。负责初始化日志、FFmpeg 运行时、依赖注入容器，并创建主窗口。
+/// </summary>
 public partial class App : Application
 {
+    /// <summary>
+    /// 应用级服务提供者，供全局访问已注册的依赖服务。
+    /// </summary>
     public IServiceProvider? Services { get; private set; }
 
     public override void Initialize()
@@ -22,6 +28,13 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
+    /// <summary>
+    /// Avalonia 框架初始化完成后的回调。按顺序执行：
+    /// 1. 初始化日志系统
+    /// 2. 初始化 FFmpeg 运行时（容错，失败不阻断启动）
+    /// 3. 配置依赖注入
+    /// 4. 创建主窗口并绑定 ViewModel
+    /// </summary>
     public override void OnFrameworkInitializationCompleted()
     {
         // 初始化日志
@@ -69,6 +82,9 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
+    /// <summary>
+    /// 注册应用所需的所有依赖服务到 DI 容器。
+    /// </summary>
     private void ConfigureServices(IServiceCollection services)
     {
         // core services

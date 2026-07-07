@@ -3,6 +3,9 @@ using System;
 
 namespace Framora;
 
+/// <summary>
+/// 应用程序入口点。负责配置并启动 Avalonia 桌面生命周期。
+/// </summary>
 sealed class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any

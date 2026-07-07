@@ -1,20 +1,113 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Framora.ViewModels"
+        xmlns:conv="using:Framora.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="480"
         x:Class="Framora.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Framora">
+        Title="Framora"
+        MinWidth="500" MinHeight="400">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Window.Resources>
+        <conv:BoolNegationConverter x:Key="BoolNegation" />
+    </Window.Resources>
+
+    <DockPanel>
+        <!-- 状态栏：底部停靠 -->
+        <Grid DockPanel.Dock="Bottom" Margin="12,8">
+            <ProgressBar Minimum="0"
+                         Maximum="{Binding ProgressTotal}"
+                         Value="{Binding ProgressCurrent}"
+                         IsVisible="{Binding IsExtracting}"
+                         Height="4" />
+            <TextBlock Text="{Binding StatusText}"
+                       VerticalAlignment="Center"
+                       FontSize="12"
+                       Opacity="0.7" />
+        </Grid>
+
+        <!-- 主内容 -->
+        <ScrollViewer>
+            <StackPanel Spacing="16" Margin="24">
+
+                <!-- 输入视频 -->
+                <TextBlock Text="输入视频" FontWeight="SemiBold" FontSize="14" />
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                    <TextBox Grid.Column="0"
+                             Text="{Binding InputVideoPath}"
+                             PlaceholderText="选择视频文件路径…" />
+                    <Button Grid.Column="1"
+                            Content="浏览…"
+                            Click="OnBrowseInputClick" />
+                    <Button Grid.Column="2"
+                            Content="探测信息"
+                            Command="{Binding LoadVideoInfoCommand}" />
+                </Grid>
+
+                <!-- 视频信息 -->
+                <TextBlock Text="{Binding VideoInfoText}"
+                           IsVisible="{Binding VideoInfoText}"
+                           FontSize="12"
+                           Opacity="0.8"
+                           Margin="0,-8,0,0" />
+
+                <!-- 输出目录 -->
+                <TextBlock Text="输出目录" FontWeight="SemiBold" FontSize="14" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <TextBox Grid.Column="0"
+                             Text="{Binding OutputDirectory}"
+                             PlaceholderText="选择图片输出目录…" />
+                    <Button Grid.Column="1"
+                            Content="浏览…"
+                            Click="OnBrowseOutputClick" />
+                </Grid>
+
+                <!-- 提取设置 -->
+                <TextBlock Text="提取设置" FontWeight="SemiBold" FontSize="14" />
+                <StackPanel Orientation="Horizontal" Spacing="24">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="帧率 (FPS)" FontSize="12" Opacity="0.7" />
+                        <NumericUpDown Value="{Binding Fps}"
+                                       Minimum="1"
+                                       Maximum="120"
+                                       FormatString="F0"
+                                       Width="140"
+                                       HorizontalAlignment="Left" />
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="输出格式" FontSize="12" Opacity="0.7" />
+                        <ComboBox ItemsSource="{Binding OutputFormats}"
+                                  SelectedItem="{Binding OutputFormat}"
+                                  Width="140"
+                                  HorizontalAlignment="Left" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- 操作按钮 -->
+                <StackPanel Orientation="Horizontal"
+                            Spacing="12"
+                            HorizontalAlignment="Center"
+                            Margin="0,8,0,0">
+                    <Button Content="开始提取"
+                            Command="{Binding ExtractFramesCommand}"
+                            IsVisible="{Binding IsExtracting, Converter={StaticResource BoolNegation}}"
+                            Classes="accent"
+                            MinWidth="120" />
+                    <Button Content="取消"
+                            Command="{Binding CancelExtractingCommand}"
+                            IsVisible="{Binding IsExtracting}"
+                            MinWidth="120" />
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
 
 </Window>
